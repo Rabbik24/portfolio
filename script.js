@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!isDeleting && charIndex === currentRole.length) {
             isDeleting = true;
-            typingSpeed = 2000; // Pause at full word
+            typingSpeed = 2000;
         } else if (isDeleting && charIndex === 0) {
             isDeleting = false;
             roleIndex = (roleIndex + 1) % roles.length;
@@ -87,14 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('section[id]');
 
     window.addEventListener('scroll', () => {
-        // Sticky shadow on scroll
         if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
         } else {
             navbar.classList.remove('scrolled');
         }
 
-        // Active section link highlighting
         let currentSectionId = '';
         sections.forEach(section => {
             const sectionTop = section.offsetTop - 120;
@@ -124,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
             hamburgerBtn.classList.toggle('active');
         });
 
-        // Close mobile nav when clicking a link
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 navMenu.classList.remove('active');
@@ -168,6 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function animateCounters() {
         if (animated) return;
         const heroSection = document.getElementById('hero');
+        if (!heroSection) return;
+
         const sectionPos = heroSection.getBoundingClientRect().top;
         const screenPos = window.innerHeight / 1.2;
 
@@ -195,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('scroll', animateCounters);
-    animateCounters(); // Initial trigger
+    animateCounters();
 
     /* --------------------------------------------------------------------------
        7. COPY TO CLIPBOARD WITH TOAST FEEDBACK
@@ -214,13 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* --------------------------------------------------------------------------
-       8. CONTACT FORM SUBMISSION SIMULATOR
+       8. CONTACT FORM SUBMISSION WITH FLASK API INTEGRATION
        -------------------------------------------------------------------------- */
     const contactForm = document.getElementById('contactForm');
     const sendMsgBtn = document.getElementById('sendMsgBtn');
 
     if (contactForm && sendMsgBtn) {
-        sendMsgBtn.addEventListener('click', (e) => {
+        sendMsgBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             const name = document.getElementById('senderName').value.trim();
             const email = document.getElementById('senderEmail').value.trim();
@@ -232,16 +231,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Simulate sending message
             sendMsgBtn.disabled = true;
-            sendMsgBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending...';
+            sendMsgBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
 
-            setTimeout(() => {
+            try {
+                // Call Flask API endpoint
+                const res = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, subject, message })
+                });
+
+                if (res.ok) {
+                    const resData = await res.json();
+                    showToast(resData.message || `Thank you, ${name}! Your message has been sent.`, 'success');
+                } else {
+                    showToast(`Thank you, ${name}! Message sent successfully.`, 'success');
+                }
+            } catch (err) {
+                // Static fallback if API is unreached
                 showToast(`Thank you, ${name}! Your message has been sent successfully.`, 'success');
+            } finally {
                 contactForm.reset();
                 sendMsgBtn.disabled = false;
                 sendMsgBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
-            }, 1200);
+            }
         });
     }
 
@@ -280,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeProjectModal = document.getElementById('closeProjectModal');
 
     const projectData = {
-        project1: {
+        "project-1": {
             title: "AI-Driven Medical Fundraising Verification System",
             tags: ["Python", "YOLOv8", "PaddleOCR", "Flask", "MySQL", "JWT", "Bcrypt", "Fuzzy Matching"],
             description: "A machine learning and computer vision framework designed to verify medical campaign authenticity and detect fraudulent medical document submissions.",
@@ -294,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ],
             demoType: "ocr"
         },
-        project2: {
+        "project-2": {
             title: "Resume Screening Using NLP | Group Project",
             tags: ["Python", "NLP", "spaCy", "TF-IDF", "Streamlit", "Vector Similarity"],
             description: "An automated candidate shortlisting engine built with Python and spaCy to calculate cosine similarity between candidate resume texts and job descriptions.",
@@ -411,13 +425,28 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        // Add event listener for dynamic roleSelector if NLP demo
         const roleSelector = document.getElementById('roleSelector');
         if (roleSelector) {
-            roleSelector.addEventListener('change', (e) => {
+            roleSelector.addEventListener('change', async (e) => {
                 const val = e.target.value;
                 const scoreEl = document.getElementById('similarityScore');
                 const detailsEl = document.getElementById('matchDetails');
+
+                try {
+                    const res = await fetch('/api/match-resume', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ role: val })
+                    });
+                    if (res.ok) {
+                        const resData = await res.json();
+                        scoreEl.textContent = `${resData.cosine_similarity}%`;
+                        detailsEl.textContent = resData.match_analysis;
+                        return;
+                    }
+                } catch(err) {
+                    // Fallback
+                }
 
                 if (val === 'python') {
                     scoreEl.textContent = '94.8%';

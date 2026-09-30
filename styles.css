@@ -781,7 +781,6 @@ body.light-theme .theme-toggle-btn .icon-dark { display: none; }
 }
 
 .pillar-card:hover {
-    transform: translateY(-50%);
     border-color: var(--accent-primary);
     transform: translateY(-5px);
 }
@@ -991,7 +990,6 @@ body.light-theme .theme-toggle-btn .icon-dark { display: none; }
     color: var(--text-muted);
     font-size: 0.85rem;
     font-weight: 400;
-
 }
 
 .period-badge {
@@ -1002,7 +1000,6 @@ body.light-theme .theme-toggle-btn .icon-dark { display: none; }
     border-radius: var(--radius-full);
     font-size: 0.85rem;
     font-weight: 600;
-
 }
 
 .accomplishment-list {
