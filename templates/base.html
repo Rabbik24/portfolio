@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio of Mohamed Rabbik M - Software Developer & Data Analytics Professional specializing in Python, AI/ML, Web Development, and Data Engineering.">
+    <meta name="keywords" content="Mohamed Rabbik M, Software Developer, Data Analytics, Python, AI, ML, Flask, Django, SQL, Portfolio, Resume">
+    <meta name="author" content="Mohamed Rabbik M">
+    <title>{% block title %}Mohamed Rabbik M | Software Developer & Data Analytics{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') if url_for is defined else 'static/css/styles.css' }}">
+</head>
+<body class="dark-theme">
+    <!-- Background Animated Particles & Grid Glow -->
+    <div class="bg-glow-container" aria-hidden="true">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+        <div class="grid-pattern"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="navbar-header" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="logo-brand">
+                <span class="logo-symbol">&lt;/&gt;</span>
+                <span class="logo-text">Rabbik<span class="accent-dot">.dev</span></span>
+            </a>
+
+            <nav class="nav-menu" id="navMenu">
+                <ul class="nav-list">
+                    <li><a href="#summary" class="nav-link active">About</a></li>
+                    <li><a href="#skills" class="nav-link">Skills</a></li>
+                    <li><a href="#experience" class="nav-link">Experience</a></li>
+                    <li><a href="#projects" class="nav-link">Projects</a></li>
+                    <li><a href="#education" class="nav-link">Education</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <!-- Theme Toggle Button -->
+                <button class="icon-btn theme-toggle-btn" id="themeToggle" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
+                    <i class="fa-solid fa-moon icon-dark"></i>
+                    <i class="fa-solid fa-sun icon-light"></i>
+                </button>
+
+                <!-- Classic Resume Mode Toggle -->
+                <button class="btn btn-outline btn-sm resume-mode-btn" id="resumeModeToggle" title="View Printable Resume Format">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span>Resume View</span>
+                </button>
+
+                <!-- Mobile Hamburger Button -->
+                <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle Navigation Menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main id="mainContent">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- CLASSIC SINGLE-COLUMN RESUME VIEW OVERLAY -->
+    <div class="resume-view-overlay" id="resumeViewOverlay">
+        <div class="resume-view-modal">
+            <div class="resume-modal-bar">
+                <span><i class="fa-solid fa-file-lines"></i> Mohamed Rabbik M - Printable Single-Column Resume</span>
+                <div class="resume-modal-actions">
+                    <button class="btn btn-sm btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save PDF</button>
+                    <button class="close-modal-btn" id="closeResumeView">&times;</button>
+                </div>
+            </div>
+
+            <!-- Single Column Classic Resume Markup -->
+            <div class="classic-resume-paper" id="printableResume">
+                <header class="cr-header">
+                    <h1 class="cr-name">MOHAMED RABBIK M</h1>
+                    <div class="cr-subtitle">SOFTWARE DEVELOPER | DATA ANALYTICS</div>
+                    <div class="cr-contact-row">
+                        <span><i class="fa-solid fa-envelope"></i> {{ resume.profile.email }}</span>
+                        <span><i class="fa-solid fa-phone"></i> {{ resume.profile.phone }}</span>
+                        <span><i class="fa-brands fa-linkedin"></i> LinkedIn</span>
+                        <span><i class="fa-brands fa-github"></i> GitHub</span>
+                        <span><i class="fa-solid fa-globe"></i> Portfolio</span>
+                    </div>
+                </header>
+
+                <hr class="cr-divider">
+
+                <section class="cr-section">
+                    <h2 class="cr-section-title">PROFESSIONAL SUMMARY</h2>
+                    <p class="cr-text">{{ resume.summary }}</p>
+                </section>
+
+                <hr class="cr-divider">
+
+                <section class="cr-section">
+                    <h2 class="cr-section-title">SKILLS</h2>
+                    <table class="cr-skills-table">
+                        <tr>
+                            <td class="cr-skill-label">Programming Languages</td>
+                            <td>: {{ resume.skills.programming | join(', ') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="cr-skill-label">Libraries/Frameworks</td>
+                            <td>: {{ resume.skills.frameworks | join(', ') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="cr-skill-label">Databases</td>
+                            <td>: {{ resume.skills.databases | join(', ') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="cr-skill-label">Data Analytics & AI/ML</td>
+                            <td>: {{ resume.skills.data_ai | join(', ') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="cr-skill-label">Developer & AI Tools</td>
+                            <td>: {{ resume.skills.tools | join(', ') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="cr-skill-label">Soft Skills</td>
+                            <td>: {{ resume.skills.soft_skills | join(', ') }}</td>
+                        </tr>
+                    </table>
+                </section>
+
+                <hr class="cr-divider">
+
+                <section class="cr-section">
+                    <h2 class="cr-section-title">PROFESSIONAL EXPERIENCE</h2>
+                    {% for exp in resume.experience %}
+                    <div class="cr-exp-item">
+                        <div class="cr-exp-head">
+                            <span class="cr-role">{{ exp.role }}</span>
+                            <span class="cr-dates">{{ exp.period }}</span>
+                        </div>
+                        <div class="cr-company">{{ exp.company }} | {{ exp.location }}</div>
+                        <ul class="cr-bullets">
+                            {% for bullet in exp.highlights %}
+                            <li>{{ bullet }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <hr class="cr-divider">
+
+                <section class="cr-section">
+                    <h2 class="cr-section-title">PROJECTS</h2>
+                    {% for proj in resume.projects %}
+                    <div class="cr-project-item">
+                        <div class="cr-proj-title">{{ proj.title }} {% if proj.badge == 'Group Project' %}| Group Project{% endif %}</div>
+                        <div class="cr-proj-tech">{{ proj.tech | join(', ') }}</div>
+                        <ul class="cr-bullets">
+                            {% for highlight in proj.highlights %}
+                            <li>{{ highlight }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <hr class="cr-divider">
+
+                <section class="cr-section">
+                    <h2 class="cr-section-title">EDUCATION</h2>
+                    <ul class="cr-edu-list">
+                        {% for edu in resume.education %}
+                        <li><strong>{{ edu.degree }}</strong> — {{ edu.institution }} | <strong>{{ edu.period }}</strong> | <strong>CGPA {{ edu.cgpa }}</strong></li>
+                        {% endfor %}
+                    </ul>
+                </section>
+
+                <hr class="cr-divider">
+
+                <section class="cr-section">
+                    <h2 class="cr-section-title">CERTIFICATIONS</h2>
+                    <ul class="cr-cert-list">
+                        {% for cert in resume.certifications %}
+                        <li>{{ cert.title }} — {{ cert.issuer }}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT DETAILS INTERACTIVE MODAL -->
+    <div class="project-modal-overlay" id="projectModalOverlay">
+        <div class="project-modal-card glass-panel">
+            <button class="close-modal-btn" id="closeProjectModal">&times;</button>
+            <div id="projectModalBody"></div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="section-container footer-inner">
+            <div class="footer-brand">
+                <a href="#hero" class="logo-brand">
+                    <span class="logo-symbol">&lt;/&gt;</span>
+                    <span class="logo-text">Mohamed Rabbik M</span>
+                </a>
+                <p>Software Developer & Data Analytics Professional</p>
+            </div>
+
+            <div class="footer-links">
+                <a href="#summary">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#education">Education</a>
+                <a href="#contact">Contact</a>
+            </div>
+
+            <div class="footer-copy">
+                &copy; 2026 Mohamed Rabbik M. Built with Python, Flask, HTML5, CSS3 & JavaScript.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/script.js') if url_for is defined else 'static/js/script.js' }}"></script>
+</body>
+</html>

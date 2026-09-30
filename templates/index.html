@@ -1,0 +1,516 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero-section" id="hero">
+    <div class="section-container hero-inner">
+        <div class="hero-content">
+            <div class="badge-status">
+                <span class="status-dot pulsing"></span>
+                <span class="status-text">Available for Software Engineering & Data Analytics Roles</span>
+            </div>
+
+            <h1 class="hero-title">
+                Hi, I'm <span class="gradient-text">{{ resume.profile.name }}</span>
+            </h1>
+
+            <h2 class="hero-subtitle">
+                <span class="dynamic-role-prefix">Specialized in</span>
+                <span class="dynamic-typing-text" id="typingText"></span><span class="cursor-blink">|</span>
+            </h2>
+
+            <p class="hero-description">
+                MCA Graduate skilled in building end-to-end web applications, AI/ML models, computer vision systems, and automated data processing pipelines. Passionate about turning complex data into intuitive, impactful software solutions.
+            </p>
+
+            <div class="hero-cta-group">
+                <a href="#projects" class="btn btn-primary btn-glow">
+                    <i class="fa-solid fa-rocket"></i> Explore Projects
+                </a>
+                <a href="#contact" class="btn btn-outline">
+                    <i class="fa-solid fa-paper-plane"></i> Get in Touch
+                </a>
+                <button class="btn btn-glass" id="openResumeModal">
+                    <i class="fa-solid fa-eye"></i> Quick Resume
+                </button>
+            </div>
+
+            <!-- Quick Metrics Counter Cards -->
+            <div class="hero-stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                    <div class="stat-data">
+                        <span class="stat-number" data-target="150">0</span><span class="plus">+</span>
+                        <span class="stat-label">Learners Mentored</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+                    <div class="stat-data">
+                        <span class="stat-number" data-target="45">0</span><span class="percent">%</span>
+                        <span class="stat-label">Workflow Boost</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-bullseye"></i></div>
+                    <div class="stat-data">
+                        <span class="stat-number" data-target="70">0</span><span class="percent">%</span>
+                        <span class="stat-label">Shortlisting Efficiency</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <div class="stat-data">
+                        <span class="stat-number-text">8.2 / 10</span>
+                        <span class="stat-label">MCA CGPA Score</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Graphic Visual -->
+        <div class="hero-visual">
+            <div class="code-window-card">
+                <div class="code-window-header">
+                    <div class="window-buttons">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <div class="window-title">rabbik_profile.py</div>
+                    <div class="window-badge">Python 3.11</div>
+                </div>
+                <div class="code-window-body">
+                    <pre><code><span class="code-keyword">class</span> <span class="code-class">SoftwareProfessional</span>:
+    <span class="code-keyword">def</span> <span class="code-func">__init__</span>(self):
+        self.name = <span class="code-str">"{{ resume.profile.name }}"</span>
+        self.degree = <span class="code-str">"MCA (CGPA 8.2)"</span>
+        self.location = <span class="code-str">"{{ resume.profile.location }}"</span>
+        self.core_stack = [
+            <span class="code-str">"Python"</span>, <span class="code-str">"Flask/Django"</span>, 
+            <span class="code-str">"SQL"</span>, <span class="code-str">"Power BI"</span>, 
+            <span class="code-str">"YOLOv8 & NLP"</span>, <span class="code-str">"JavaScript"</span>
+        ]
+        
+    <span class="code-keyword">def</span> <span class="code-func">get_mission</span>(self):
+        <span class="code-keyword">return</span> <span class="code-str">"Building intelligent software & actionable data analytics"</span>
+
+<span class="code-comment"># Execute candidate profile verification</span>
+rabbik = SoftwareProfessional()
+<span class="code-builtin">print</span>(f<span class="code-str">"Status: Ready to innovate 🚀"</span>)</code></pre>
+                </div>
+                <div class="code-window-footer">
+                    <span class="terminal-status"><i class="fa-solid fa-check-circle"></i> Compiled successfully</span>
+                    <span class="terminal-loc"><i class="fa-solid fa-code-commit"></i> Master Branch</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROFESSIONAL SUMMARY SECTION -->
+<section class="section-padding" id="summary">
+    <div class="section-container">
+        <div class="section-header">
+            <span class="section-tag"><i class="fa-solid fa-user-astronaut"></i> Overview</span>
+            <h2 class="section-title">Professional Summary</h2>
+            <div class="header-divider"></div>
+        </div>
+
+        <div class="summary-card glass-panel">
+            <div class="summary-text-content">
+                <p class="summary-lead">
+                    <strong>MCA graduate</strong> with professional experience in <strong>Python, SQL, Data Analytics, Web Development</strong>, and <strong>AI/ML applications</strong>.
+                </p>
+                <p>
+                    Currently working as a <strong>Technical Consultant at Vista Tech</strong>, delivering hands-on training and practical solutions in Python, SQL, Data Analytics, and software development. Previously worked as a <strong>Full Stack Developer Intern</strong> developing web applications and integrating APIs.
+                </p>
+                <p>
+                    Experienced in building AI-driven applications using <strong>Python, Flask, MySQL, NLP, OCR, Computer Vision, REST APIs</strong>, and data processing techniques. Possesses strong problem-solving and communication skills with a passion for software development, data analytics, AI/ML, and Data Engineering.
+                </p>
+            </div>
+
+            <!-- Core Value Pillars -->
+            <div class="pillars-grid">
+                <div class="pillar-card">
+                    <div class="pillar-icon"><i class="fa-solid fa-code"></i></div>
+                    <h3>Full Stack Development</h3>
+                    <p>Building scalable backend APIs in Python (Flask/Django) and responsive frontends in HTML, CSS, JS, and Angular.</p>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                    <h3>Data Analytics & BI</h3>
+                    <p>Extracting key business insights using SQL, Pandas, NumPy, Matplotlib, Seaborn, and interactive Power BI dashboards.</p>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon"><i class="fa-solid fa-brain"></i></div>
+                    <h3>AI, ML & Computer Vision</h3>
+                    <p>Developing computer vision (YOLOv8, PaddleOCR) and NLP systems (spaCy, TF-IDF) for automated document verification & resume screening.</p>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <h3>Technical Mentorship</h3>
+                    <p>Mentored 150+ students in Python, SQL, debugging, and software principles with practical hands-on exercises.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SKILLS SECTION -->
+<section class="section-padding bg-alt" id="skills">
+    <div class="section-container">
+        <div class="section-header">
+            <span class="section-tag"><i class="fa-solid fa-layer-group"></i> Expertise</span>
+            <h2 class="section-title">Technical & Soft Skills</h2>
+            <div class="header-divider"></div>
+        </div>
+
+        <!-- Skill Filter Tabs -->
+        <div class="skills-filter-container">
+            <button class="filter-tab active" data-filter="all">All Skills</button>
+            <button class="filter-tab" data-filter="languages">Programming</button>
+            <button class="filter-tab" data-filter="frameworks">Frameworks & Libs</button>
+            <button class="filter-tab" data-filter="data-ai">Data & AI/ML</button>
+            <button class="filter-tab" data-filter="tools">Tools & Database</button>
+            <button class="filter-tab" data-filter="soft">Soft Skills</button>
+        </div>
+
+        <!-- Skills Grid Showcase -->
+        <div class="skills-grid" id="skillsGrid">
+
+            <!-- Programming Languages -->
+            <div class="skill-category-card" data-category="languages">
+                <div class="category-header">
+                    <i class="fa-solid fa-laptop-code category-icon"></i>
+                    <h3>Programming Languages</h3>
+                </div>
+                <div class="skill-tags">
+                    {% for lang in resume.skills.programming %}
+                    <div class="skill-pill {% if lang in ['Python', 'JavaScript'] %}highlight{% endif %}">
+                        <i class="fa-solid fa-code"></i> {{ lang }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Frameworks & Libraries -->
+            <div class="skill-category-card" data-category="frameworks">
+                <div class="category-header">
+                    <i class="fa-solid fa-cubes category-icon"></i>
+                    <h3>Libraries & Frameworks</h3>
+                </div>
+                <div class="skill-tags">
+                    {% for fw in resume.skills.frameworks %}
+                    <div class="skill-pill {% if fw in ['Flask', 'Django', 'Pandas'] %}highlight{% endif %}">
+                        <i class="fa-solid fa-cube"></i> {{ fw }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Data Analytics & AI/ML -->
+            <div class="skill-category-card" data-category="data-ai">
+                <div class="category-header">
+                    <i class="fa-solid fa-brain category-icon"></i>
+                    <h3>Data Analytics & AI/ML</h3>
+                </div>
+                <div class="skill-tags">
+                    {% for item in resume.skills.data_ai %}
+                    <div class="skill-pill {% if item in ['Power BI', 'NLP', 'YOLOv8'] %}highlight{% endif %}">
+                        <i class="fa-solid fa-microchip"></i> {{ item }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Database & Tools -->
+            <div class="skill-category-card" data-category="tools">
+                <div class="category-header">
+                    <i class="fa-solid fa-toolbox category-icon"></i>
+                    <h3>Databases & Developer Tools</h3>
+                </div>
+                <div class="skill-tags">
+                    {% for db in resume.skills.databases %}
+                    <div class="skill-pill highlight"><i class="fa-solid fa-database"></i> {{ db }}</div>
+                    {% endfor %}
+                    {% for tool in resume.skills.tools %}
+                    <div class="skill-pill"><i class="fa-solid fa-wrench"></i> {{ tool }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Soft Skills -->
+            <div class="skill-category-card full-width" data-category="soft">
+                <div class="category-header">
+                    <i class="fa-solid fa-lightbulb category-icon"></i>
+                    <h3>Soft Skills & Professional Competencies</h3>
+                </div>
+                <div class="skill-tags">
+                    {% for soft in resume.skills.soft_skills %}
+                    <div class="skill-pill soft-pill"><i class="fa-solid fa-check"></i> {{ soft }}</div>
+                    {% endfor %}
+                    <div class="skill-pill soft-pill"><i class="fa-solid fa-chalkboard"></i> Technical Mentorship</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- PROFESSIONAL EXPERIENCE SECTION -->
+<section class="section-padding" id="experience">
+    <div class="section-container">
+        <div class="section-header">
+            <span class="section-tag"><i class="fa-solid fa-briefcase"></i> Work History</span>
+            <h2 class="section-title">Professional Experience</h2>
+            <div class="header-divider"></div>
+        </div>
+
+        <div class="timeline-wrapper">
+            {% for exp in resume.experience %}
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card glass-panel">
+                    <div class="timeline-header">
+                        <div>
+                            <h3 class="role-title">{{ exp.role }}</h3>
+                            <h4 class="company-name">
+                                <i class="fa-solid fa-building"></i> {{ exp.company }} 
+                                <span class="location-tag"><i class="fa-solid fa-location-dot"></i> {{ exp.location }}</span>
+                            </h4>
+                        </div>
+                        <div class="period-badge">
+                            <i class="fa-regular fa-calendar-alt"></i> {{ exp.period }}
+                        </div>
+                    </div>
+                    <div class="timeline-body">
+                        <ul class="accomplishment-list">
+                            {% for bullet in exp.highlights %}
+                            <li>
+                                <i class="fa-solid fa-angle-right bullet-icon"></i>
+                                <span>{{ bullet | safe }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="tech-stack-used">
+                            {% for tag in exp.tags %}
+                            <span class="mini-tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- PROJECTS SECTION -->
+<section class="section-padding bg-alt" id="projects">
+    <div class="section-container">
+        <div class="section-header">
+            <span class="section-tag"><i class="fa-solid fa-diagram-project"></i> Portfolio Showcase</span>
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="header-divider"></div>
+        </div>
+
+        <div class="projects-grid">
+            {% for proj in resume.projects %}
+            <div class="project-card glass-panel">
+                <div class="project-badge"><i class="fa-solid fa-diagram-next"></i> {{ proj.category }}</div>
+                <div class="project-content">
+                    {% if proj.badge == 'Group Project' %}
+                    <div class="group-project-tag"><i class="fa-solid fa-users"></i> Group Project</div>
+                    {% endif %}
+                    <h3 class="project-title">{{ proj.title }}</h3>
+                    <p class="project-desc">{{ proj.description }}</p>
+                    
+                    <div class="project-features">
+                        {% for highlight in proj.highlights %}
+                        <div class="feature-item">
+                            <i class="fa-solid fa-check-double text-accent"></i>
+                            <span>{{ highlight }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="project-tech-pills">
+                        {% for t in proj.tech %}
+                        <span>{{ t }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="project-card-footer">
+                        <button class="btn btn-sm btn-primary project-modal-trigger" data-project="{{ proj.id }}">
+                            <i class="fa-solid fa-sliders"></i> Interactive Demo & Architecture
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- EDUCATION & CERTIFICATIONS SECTION -->
+<section class="section-padding" id="education">
+    <div class="section-container">
+        <div class="grid-2col">
+            
+            <!-- Education Column -->
+            <div class="edu-col">
+                <div class="section-header align-left">
+                    <span class="section-tag"><i class="fa-solid fa-graduation-cap"></i> Academics</span>
+                    <h2 class="section-title">Education</h2>
+                    <div class="header-divider"></div>
+                </div>
+
+                <div class="edu-cards-list">
+                    {% for edu in resume.education %}
+                    <div class="edu-card glass-panel">
+                        <div class="edu-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div class="edu-details">
+                            <div class="edu-degree">{{ edu.degree }}</div>
+                            <div class="edu-school">{{ edu.institution }}</div>
+                            <div class="edu-meta">
+                                <span class="edu-year"><i class="fa-regular fa-calendar"></i> {{ edu.period }}</span>
+                                <span class="edu-cgpa"><i class="fa-solid fa-star text-warning"></i> CGPA: <strong>{{ edu.cgpa }}</strong></span>
+                            </div>
+                            <div class="cgpa-bar-wrapper">
+                                <div class="cgpa-bar-fill" style="width: {{ edu.percentage }}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Certifications Column -->
+            <div class="cert-col">
+                <div class="section-header align-left">
+                    <span class="section-tag"><i class="fa-solid fa-certificate"></i> Credentials</span>
+                    <h2 class="section-title">Certifications</h2>
+                    <div class="header-divider"></div>
+                </div>
+
+                <div class="cert-cards-list">
+                    {% for cert in resume.certifications %}
+                    <div class="cert-card glass-panel">
+                        <div class="cert-badge-icon"><i class="fa-solid fa-award"></i></div>
+                        <div class="cert-info">
+                            <h4 class="cert-title">{{ cert.title }}</h4>
+                            <p class="cert-issuer"><i class="fa-solid fa-ribbon"></i> {{ cert.issuer }}</p>
+                            <p class="cert-desc">{{ cert.details }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="section-padding bg-alt" id="contact">
+    <div class="section-container">
+        <div class="section-header">
+            <span class="section-tag"><i class="fa-solid fa-envelope-open-text"></i> Connect</span>
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="header-divider"></div>
+            <p class="section-subtitle">Interested in collaborating or hiring for Software Development or Data Analytics roles? Let's connect!</p>
+        </div>
+
+        <div class="contact-grid">
+            
+            <!-- Contact Direct Info -->
+            <div class="contact-info-cards">
+                
+                <!-- Email Card -->
+                <div class="contact-card glass-panel">
+                    <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
+                    <div class="contact-details">
+                        <span class="contact-label">Email Address</span>
+                        <a href="mailto:{{ resume.profile.email }}" class="contact-val">{{ resume.profile.email }}</a>
+                    </div>
+                    <button class="copy-btn" data-copy="{{ resume.profile.email }}" title="Copy Email">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+
+                <!-- Phone Card -->
+                <div class="contact-card glass-panel">
+                    <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+                    <div class="contact-details">
+                        <span class="contact-label">Phone Number</span>
+                        <a href="tel:{{ resume.profile.phone }}" class="contact-val">{{ resume.profile.phone }}</a>
+                    </div>
+                    <button class="copy-btn" data-copy="{{ resume.profile.phone }}" title="Copy Phone">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+
+                <!-- Location Card -->
+                <div class="contact-card glass-panel">
+                    <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
+                    <div class="contact-details">
+                        <span class="contact-label">Current Location</span>
+                        <span class="contact-val">{{ resume.profile.location }}</span>
+                    </div>
+                </div>
+
+                <!-- Social Links Card -->
+                <div class="social-links-card glass-panel">
+                    <h4 class="social-card-title">Professional Links</h4>
+                    <div class="social-buttons-grid">
+                        <a href="{{ resume.profile.linkedin }}" target="_blank" rel="noopener noreferrer" class="social-btn linkedin">
+                            <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+                        </a>
+                        <a href="{{ resume.profile.github }}" target="_blank" rel="noopener noreferrer" class="social-btn github">
+                            <i class="fa-brands fa-github"></i> GitHub
+                        </a>
+                        <a href="#hero" class="social-btn portfolio">
+                            <i class="fa-solid fa-globe"></i> Portfolio
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Contact Form Simulation -->
+            <div class="contact-form-card glass-panel">
+                <h3 class="form-title"><i class="fa-solid fa-paper-plane"></i> Send Me a Message</h3>
+                <form id="contactForm" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="senderName">Your Name</label>
+                        <input type="text" id="senderName" class="form-input" placeholder="e.g. John Doe" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="senderEmail">Your Email</label>
+                        <input type="email" id="senderEmail" class="form-input" placeholder="e.g. john@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="msgSubject">Subject</label>
+                        <input type="text" id="msgSubject" class="form-input" placeholder="e.g. Opportunity for Software Developer role" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="senderMessage">Message</label>
+                        <textarea id="senderMessage" class="form-input textarea" rows="4" placeholder="Hello Mohamed, I reviewed your portfolio..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" id="sendMsgBtn">
+                        <i class="fa-solid fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}
