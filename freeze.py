@@ -1,18 +1,25 @@
 """
 =============================================================================
-Static Site Generator Script (Flask Exporter)
-Freezes the Flask app into a standalone static site inside the build/ directory
+Django Static Site Exporter Script
+Freezes the Django app into a standalone static site inside the build/ directory
 for deployment to GitHub Pages or static web hosts.
 =============================================================================
 """
 
 import os
+import sys
 import shutil
 
-from app import app
+# Configure Django Settings
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'portfolio_project.settings')
+
+import django
+django.setup()
+
+from django.test import Client
 
 def build_static_site():
-    print("[+] Initializing Static Build Exporter...")
+    print("[+] Initializing Django Static Exporter...")
 
     build_dir = os.path.join(os.path.dirname(__file__), 'build')
     if os.path.exists(build_dir):
@@ -25,26 +32,16 @@ def build_static_site():
     if os.path.exists(static_src):
         shutil.copytree(static_src, static_dst)
 
-    # Try Flask-Freeze or standard Jinja2 context render
-    try:
-        from flask_frozen import Freezer
-        freezer = Freezer(app)
-        app.config['FREEZER_DESTINATION'] = 'build'
-        app.config['FREEZER_RELATIVE_URLS'] = True
-        print("[*] Freezing Flask routes into static HTML using Flask-Freeze...")
-        freezer.freeze()
-        print("[SUCCESS] Static site generated successfully in build/ directory!")
-    except Exception as e:
-        print(f"[!] Flask-Freeze fallback mode ({e}). Rendering index.html directly...")
-        with app.test_request_context():
-            from app import home
-            html_content = home()
-            index_path = os.path.join(build_dir, 'index.html')
-            with open(index_path, 'w', encoding='utf-8') as f:
-                f.write(html_content)
-
-        # Copy top-level fallback index.html if needed
-        print("[SUCCESS] Static site rendered successfully in build/ directory!")
+    # Render main index view using Django Test Client
+    client = Client()
+    response = client.get('/')
+    if response.status_code == 200:
+        index_path = os.path.join(build_dir, 'index.html')
+        with open(index_path, 'wb') as f:
+            f.write(response.content)
+        print("[SUCCESS] Django static site exported successfully to build/index.html!")
+    else:
+        print(f"[!] Error exporting index view: Status {response.status_code}")
 
 if __name__ == '__main__':
     build_static_site()
