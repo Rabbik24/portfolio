@@ -1,12 +1,158 @@
 /* ==========================================================================
-   PORTFOLIO INTERACTIVE SCRIPT
+   PORTFOLIO INTERACTIVE & ANIMATION SCRIPT
    Mohamed Rabbik M - Software Developer & Data Analytics
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     /* --------------------------------------------------------------------------
-       1. DYNAMIC TYPING EFFECT FOR HERO SECTION
+       1. INTERACTIVE CANVAS PARTICLE CONSTELLATION BACKDROP
+       -------------------------------------------------------------------------- */
+    const bgContainer = document.querySelector('.bg-glow-container');
+    if (bgContainer) {
+        const canvas = document.createElement('canvas');
+        canvas.id = 'particleCanvas';
+        bgContainer.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particles = [];
+        const particleCount = Math.min(Math.floor(width / 20), 60);
+
+        const mouse = { x: null, y: null, radius: 140 };
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.8;
+                this.speedY = (Math.random() - 0.5) * 0.8;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > width) this.speedX *= -1;
+                if (this.y < 0 || this.y > height) this.speedY *= -1;
+
+                // Mouse push interaction
+                if (mouse.x && mouse.y) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        let force = (mouse.radius - distance) / mouse.radius;
+                        let directionX = dx / distance;
+                        let directionY = dy / distance;
+                        this.x -= directionX * force * 3;
+                        this.y -= directionY * force * 3;
+                    }
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = 'rgba(99, 102, 241, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 120) {
+                        ctx.strokeStyle = `rgba(6, 182, 212, ${1 - dist / 120})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+    }
+
+    /* --------------------------------------------------------------------------
+       2. SCROLL REVEAL OBSERVER ANIMATION
+       -------------------------------------------------------------------------- */
+    const revealElements = document.querySelectorAll(
+        '.glass-panel, .section-header, .stat-card, .timeline-item, .project-card, .edu-card, .cert-card, .contact-card'
+    );
+
+    revealElements.forEach((el, idx) => {
+        el.classList.add('reveal-on-scroll');
+        el.style.transitionDelay = `${(idx % 4) * 0.1}s`;
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    revealElements.forEach(el => observer.observe(el));
+
+    /* --------------------------------------------------------------------------
+       3. 3D CARD PERSPECTIVE TILT EFFECT ON MOUSEMOVE
+       -------------------------------------------------------------------------- */
+    const codeCard = document.querySelector('.code-window-card');
+    const heroVisual = document.querySelector('.hero-visual');
+
+    if (codeCard && heroVisual) {
+        heroVisual.addEventListener('mousemove', (e) => {
+            const rect = heroVisual.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = (y - centerY) / 15;
+            const rotateY = (centerX - x) / 15;
+
+            codeCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        heroVisual.addEventListener('mouseleave', () => {
+            codeCard.style.transform = `rotateX(0deg) rotateY(0deg)`;
+        });
+    }
+
+    /* --------------------------------------------------------------------------
+       4. DYNAMIC TYPING EFFECT FOR HERO SECTION
        -------------------------------------------------------------------------- */
     const typingElement = document.getElementById('typingText');
     const roles = [
@@ -50,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     typeEffect();
 
     /* --------------------------------------------------------------------------
-       2. LIGHT / DARK THEME TOGGLE WITH LOCALSTORAGE
+       5. LIGHT / DARK THEME TOGGLE WITH LOCALSTORAGE
        -------------------------------------------------------------------------- */
     const themeToggleBtn = document.getElementById('themeToggle');
     const savedTheme = localStorage.getItem('rabbik_theme');
@@ -80,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* --------------------------------------------------------------------------
-       3. NAVBAR SCROLL BACKGROUND & ACTIVE LINK HIGHLIGHTING
+       6. NAVBAR SCROLL BACKGROUND & ACTIVE LINK HIGHLIGHTING
        -------------------------------------------------------------------------- */
     const navbar = document.getElementById('navbar');
     const navLinks = document.querySelectorAll('.nav-link');
@@ -111,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* --------------------------------------------------------------------------
-       4. MOBILE HAMBURGER MENU TOGGLE
+       7. MOBILE HAMBURGER MENU TOGGLE
        -------------------------------------------------------------------------- */
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const navMenu = document.getElementById('navMenu');
@@ -131,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* --------------------------------------------------------------------------
-       5. INTERACTIVE SKILL CATEGORY FILTER TABS
+       8. INTERACTIVE SKILL CATEGORY FILTER TABS
        -------------------------------------------------------------------------- */
     const filterTabs = document.querySelectorAll('.filter-tab');
     const skillCards = document.querySelectorAll('.skill-category-card');
@@ -147,17 +293,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const category = card.getAttribute('data-category');
                 if (filterValue === 'all' || category === filterValue) {
                     card.style.display = 'block';
-                    card.style.opacity = '1';
+                    setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }, 50);
                 } else {
-                    card.style.display = 'none';
                     card.style.opacity = '0';
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => { card.style.display = 'none'; }, 300);
                 }
             });
         });
     });
 
     /* --------------------------------------------------------------------------
-       6. HERO STATS ANIMATED NUMBER COUNTERS
+       9. HERO STATS ANIMATED NUMBER COUNTERS
        -------------------------------------------------------------------------- */
     const statNumbers = document.querySelectorAll('.stat-number');
     let animated = false;
@@ -173,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sectionPos < screenPos) {
             statNumbers.forEach(counter => {
                 const target = parseInt(counter.getAttribute('data-target'));
-                const duration = 1500;
+                const duration = 1600;
                 const increment = target / (duration / 16);
                 let current = 0;
 
@@ -197,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
     animateCounters();
 
     /* --------------------------------------------------------------------------
-       7. COPY TO CLIPBOARD WITH TOAST FEEDBACK
+       10. COPY TO CLIPBOARD WITH TOAST FEEDBACK
        -------------------------------------------------------------------------- */
     const copyBtns = document.querySelectorAll('.copy-btn');
 
@@ -213,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* --------------------------------------------------------------------------
-       8. CONTACT FORM SUBMISSION WITH FLASK API INTEGRATION
+       11. CONTACT FORM SUBMISSION WITH DJANGO ORM API INTEGRATION
        -------------------------------------------------------------------------- */
     const contactForm = document.getElementById('contactForm');
     const sendMsgBtn = document.getElementById('sendMsgBtn');
@@ -232,11 +379,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             sendMsgBtn.disabled = true;
-            sendMsgBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+            sendMsgBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Saving Message...';
 
             try {
-                // Call Flask API endpoint
-                const res = await fetch('/api/contact', {
+                const res = await fetch('/api/contact/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, subject, message })
@@ -244,12 +390,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (res.ok) {
                     const resData = await res.json();
-                    showToast(resData.message || `Thank you, ${name}! Your message has been sent.`, 'success');
+                    showToast(resData.message || `Thank you, ${name}! Your message has been saved.`, 'success');
                 } else {
                     showToast(`Thank you, ${name}! Message sent successfully.`, 'success');
                 }
             } catch (err) {
-                // Static fallback if API is unreached
                 showToast(`Thank you, ${name}! Your message has been sent successfully.`, 'success');
             } finally {
                 contactForm.reset();
@@ -260,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* --------------------------------------------------------------------------
-       9. PRINTABLE SINGLE-COLUMN RESUME OVERLAY MODAL
+       12. PRINTABLE SINGLE-COLUMN RESUME OVERLAY MODAL
        -------------------------------------------------------------------------- */
     const resumeModeToggle = document.getElementById('resumeModeToggle');
     const openResumeModal = document.getElementById('openResumeModal');
@@ -286,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* --------------------------------------------------------------------------
-       10. PROJECT INTERACTIVE DEMO MODALS
+       13. PROJECT INTERACTIVE DEMO MODALS
        -------------------------------------------------------------------------- */
     const projectTriggers = document.querySelectorAll('.project-modal-trigger');
     const projectModalOverlay = document.getElementById('projectModalOverlay');
@@ -296,10 +441,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectData = {
         "project-1": {
             title: "AI-Driven Medical Fundraising Verification System",
-            tags: ["Python", "YOLOv8", "PaddleOCR", "Flask", "MySQL", "JWT", "Bcrypt", "Fuzzy Matching"],
+            tags: ["Python", "YOLOv8", "PaddleOCR", "Django", "MySQL", "JWT", "Bcrypt", "Fuzzy Matching"],
             description: "A machine learning and computer vision framework designed to verify medical campaign authenticity and detect fraudulent medical document submissions.",
             architecture: [
-                "1. Document Upload (Medical Invoices/Reports) via Flask REST API.",
+                "1. Document Upload (Medical Invoices/Reports) via Django/Flask REST API.",
                 "2. YOLOv8 object detection locates bill header, total amount, hospital seals & doctor signatures.",
                 "3. PaddleOCR extracts text content from bounded region bounding boxes.",
                 "4. Fuzzy Matching algorithms compare extracted hospital names against verified medical databases.",
@@ -357,14 +502,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="demo-title">
                         <i class="fa-solid fa-microchip"></i> Live AI Document Verification Simulator
                     </div>
-                    <p style="font-size:0.85rem; color: var(--text-secondary); margin-bottom:1rem;">
+                    <p style="font-size:0.88rem; color: var(--text-secondary); margin-bottom:1rem;">
                         Simulate how YOLOv8 + PaddleOCR extracts bounding boxes and calculates the campaign <strong>Trust Score</strong>.
                     </p>
                     <div class="ocr-sim-container">
                         <div class="doc-preview-box">
                             <div class="yolo-box"><i class="fa-solid fa-crop"></i> YOLOv8: Hospital Seal Detected</div>
                             <div class="yolo-box"><i class="fa-solid fa-crop"></i> YOLOv8: Patient ID & Bill Amount</div>
-                            <div style="font-size:0.75rem; color:#8b949e; margin-top:0.5rem;">
+                            <div style="font-size:0.78rem; color:#8b949e; margin-top:0.5rem;">
                                 [PaddleOCR Text Extraction]:<br>
                                 "Apollo Hospital - Bill #98421 - Amt: ₹45,000"
                             </div>
@@ -374,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div style="margin-top:0.4rem;">Hospital DB Match: <span style="color:var(--success);">100% (Fuzzy Ratio: 0.98)</span></div>
                             <div>Doctor Sign Auth: <span style="color:var(--success);">Verified</span></div>
                             <div style="margin-top:0.8rem; font-weight:600;">Calculated Campaign Trust Score:</div>
-                            <div style="font-size:1.2rem; font-weight:700; color:var(--success);">94.5% (AUTHENTIC)</div>
+                            <div style="font-size:1.25rem; font-weight:800; color:var(--success);">94.5% (AUTHENTIC)</div>
                             <div class="score-meter"><div class="score-fill"></div></div>
                         </div>
                     </div>
@@ -386,22 +531,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="demo-title">
                         <i class="fa-solid fa-brain"></i> Interactive Candidate Match Score Tester
                     </div>
-                    <p style="font-size:0.85rem; color: var(--text-secondary); margin-bottom:1rem;">
+                    <p style="font-size:0.88rem; color: var(--text-secondary); margin-bottom:1rem;">
                         Test Mohamed Rabbik's candidate match score against a target job role using spaCy & TF-IDF similarity.
                     </p>
                     <div style="margin-bottom: 1rem;">
-                        <label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:0.3rem;">Select Target Job Profile:</label>
-                        <select id="roleSelector" class="form-input" style="padding:0.5rem;">
-                            <option value="python">Python Software Developer (Flask / SQL / REST APIs)</option>
+                        <label style="font-size:0.88rem; font-weight:600; display:block; margin-bottom:0.35rem;">Select Target Job Profile:</label>
+                        <select id="roleSelector" class="form-input" style="padding:0.6rem;">
+                            <option value="python">Python Software Developer (Django / SQL / REST APIs)</option>
                             <option value="data">Data Analytics Specialist (Pandas / Power BI / SQL)</option>
                             <option value="aiml">AI / ML Engineer (YOLOv8 / spaCy / Computer Vision)</option>
                         </select>
                     </div>
                     <div class="ocr-result-box" id="nlpResultBox">
                         <div><strong>Matching Candidate: Mohamed Rabbik M</strong></div>
-                        <div style="margin-top:0.5rem;">Preprocessed Tokens: <code style="color:var(--accent-secondary);">["python", "sql", "flask", "nlp", "spacy", "powerbi", "mca"]</code></div>
+                        <div style="margin-top:0.5rem;">Preprocessed Tokens: <code style="color:var(--accent-secondary);">["python", "django", "sql", "nlp", "spacy", "powerbi", "mca"]</code></div>
                         <div style="margin-top:0.5rem;">TF-IDF Cosine Similarity Score: <strong style="color:var(--success);" id="similarityScore">94.8%</strong></div>
-                        <div style="margin-top:0.5rem; font-size:0.85rem; color:var(--text-secondary);" id="matchDetails">High match for Python backend, API integration, and database management.</div>
+                        <div style="margin-top:0.5rem; font-size:0.88rem; color:var(--text-secondary);" id="matchDetails">High match for Python backend, API integration, and database management.</div>
                     </div>
                 </div>
             `;
@@ -433,7 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const detailsEl = document.getElementById('matchDetails');
 
                 try {
-                    const res = await fetch('/api/match-resume', {
+                    const res = await fetch('/api/match-resume/', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ role: val })
@@ -444,9 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         detailsEl.textContent = resData.match_analysis;
                         return;
                     }
-                } catch(err) {
-                    // Fallback
-                }
+                } catch(err) {}
 
                 if (val === 'python') {
                     scoreEl.textContent = '94.8%';
@@ -463,7 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* --------------------------------------------------------------------------
-       11. TOAST NOTIFICATION HELPER
+       14. TOAST NOTIFICATION HELPER
        -------------------------------------------------------------------------- */
     function showToast(message, type = 'info') {
         const toastContainer = document.getElementById('toastContainer');
@@ -492,9 +635,9 @@ document.addEventListener('DOMContentLoaded', () => {
         toastContainer.appendChild(toast);
 
         setTimeout(() => {
-            toast.style.animation = 'slideInRight 0.3s reverse forwards';
-            setTimeout(() => toast.remove(), 300);
-        }, 3500);
+            toast.style.animation = 'slideInRight 0.35s reverse forwards';
+            setTimeout(() => toast.remove(), 350);
+        }, 3600);
     }
 
 });
