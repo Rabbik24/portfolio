@@ -368,39 +368,67 @@ document.addEventListener('DOMContentLoaded', () => {
     if (contactForm && sendMsgBtn) {
         sendMsgBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('senderName').value.trim();
-            const email = document.getElementById('senderEmail').value.trim();
-            const subject = document.getElementById('msgSubject').value.trim();
-            const message = document.getElementById('senderMessage').value.trim();
+            const name = document.getElementById('senderName')?.value.trim();
+            const email = document.getElementById('senderEmail')?.value.trim();
+            const subject = document.getElementById('msgSubject')?.value.trim() || 'Portfolio Inquiry';
+            const message = document.getElementById('senderMessage')?.value.trim();
 
-            if (!name || !email || !subject || !message) {
-                showToast('Please fill in all form fields.', 'warning');
+            if (!name || !email || !message) {
+                showToast('Please fill in all required form fields (Name, Email, Message).', 'warning');
                 return;
             }
 
             sendMsgBtn.disabled = true;
-            sendMsgBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Saving Message...';
+            sendMsgBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending Mail...';
+
+            let apiSuccess = false;
+            const targetEmail = 'developer.rabbik@gmail.com';
 
             try {
-                const res = await fetch('/api/contact/', {
+                // Attempt primary Django/Flask API endpoint
+                let res = await fetch('/api/contact/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, subject, message })
                 });
 
+                if (!res.ok) {
+                    // Retry secondary endpoint format
+                    res = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email, subject, message })
+                    });
+                }
+
                 if (res.ok) {
                     const resData = await res.json();
-                    showToast(resData.message || `Thank you, ${name}! Your message has been saved.`, 'success');
-                } else {
-                    showToast(`Thank you, ${name}! Message sent successfully.`, 'success');
+                    showToast(resData.message || `Thank you, ${name}! Your information has been sent directly to ${targetEmail}.`, 'success');
+                    apiSuccess = true;
                 }
             } catch (err) {
-                showToast(`Thank you, ${name}! Your message has been sent successfully.`, 'success');
-            } finally {
-                contactForm.reset();
-                sendMsgBtn.disabled = false;
-                sendMsgBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
+                console.log("[Notice] API route unreachable, using direct mailto fallback for static hosting.");
             }
+
+            // Fallback for static file hosting or offline backend: launch direct mailto link to target email
+            if (!apiSuccess) {
+                const mailtoSubject = encodeURIComponent(`[Portfolio Contact] ${subject} - From ${name}`);
+                const mailtoBody = encodeURIComponent(
+                    `Hello Mohamed Rabbik,\n\n` +
+                    `Here are my contact details from your portfolio website:\n\n` +
+                    `Name: ${name}\n` +
+                    `Email: ${email}\n` +
+                    `Subject: ${subject}\n\n` +
+                    `Message:\n${message}\n`
+                );
+                
+                showToast(`Opening direct mail client to send information to ${targetEmail}...`, 'success');
+                window.location.href = `mailto:${targetEmail}?subject=${mailtoSubject}&body=${mailtoBody}`;
+            }
+
+            contactForm.reset();
+            sendMsgBtn.disabled = false;
+            sendMsgBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
         });
     }
 

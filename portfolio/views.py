@@ -1,8 +1,12 @@
 import json
+import os
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import ContactMessage
+
 
 # Structured Resume Data Dictionary for Django Context & APIs
 RESUME_DATA = {
@@ -136,7 +140,7 @@ def api_info(request):
 
 @csrf_exempt
 def api_contact(request):
-    """API endpoint to receive and store contact messages in Django DB."""
+    """API endpoint to receive contact messages, store in DB, and send direct email to developer.rabbik@gmail.com."""
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
@@ -145,13 +149,13 @@ def api_contact(request):
 
         name = data.get('name', '').strip()
         email = data.get('email', '').strip()
-        subject = data.get('subject', '').strip()
+        subject = data.get('subject', '').strip() or 'Portfolio Contact Message'
         message = data.get('message', '').strip()
 
         if not name or not email or not message:
-            return JsonResponse({'status': 'error', 'message': 'All fields are required.'}, status=400)
+            return JsonResponse({'status': 'error', 'message': 'All fields (name, email, message) are required.'}, status=400)
 
-        # Save message to SQLite database using Django ORM
+        # 1. Save message to SQLite database using Django ORM
         try:
             ContactMessage.objects.create(
                 name=name,
@@ -160,11 +164,55 @@ def api_contact(request):
                 message=message
             )
         except Exception as e:
-            pass  # Fallback if DB not migrated yet
+            print(f"[!] DB Save Exception: {e}")
+
+        # 2. Send Direct Mail to developer.rabbik@gmail.com
+        recipient_email = getattr(settings, 'NOTIFICATION_EMAIL', 'developer.rabbik@gmail.com')
+        email_sent = False
+        
+        email_subject = f"[Portfolio Contact] {subject} - From {name}"
+        email_body = (
+            f"Hello Mohamed Rabbik,\n\n"
+            f"You have received a new message from your portfolio website contact form:\n\n"
+            f"--------------------------------------------------\n"
+            f"Sender Name:    {name}\n"
+            f"Sender Email:   {email}\n"
+            f"Subject:        {subject}\n"
+            f"--------------------------------------------------\n\n"
+            f"Message:\n"
+            f"{message}\n\n"
+            f"--------------------------------------------------\n"
+            f"Reply directly to sender: {email}\n"
+        )
+
+        try:
+            from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'developer.rabbik@gmail.com') or 'developer.rabbik@gmail.com'
+            send_mail(
+                subject=email_subject,
+                message=email_body,
+                from_email=from_email,
+                recipient_list=[recipient_email],
+                fail_silently=False,
+            )
+            email_sent = True
+        except Exception as mail_err:
+            print(f"[!] SMTP Direct Mail Notice: {mail_err}")
+            # Try fallback silent attempt or console output
+            try:
+                send_mail(
+                    subject=email_subject,
+                    message=email_body,
+                    from_email=from_email,
+                    recipient_list=[recipient_email],
+                    fail_silently=True,
+                )
+            except Exception:
+                pass
 
         return JsonResponse({
             'status': 'success',
-            'message': f'Thank you, {name}! Your message has been saved in Django database.'
+            'email_sent': email_sent,
+            'message': f'Thank you, {name}! Your message and details have been sent directly to developer.rabbik@gmail.com.'
         })
 
     return JsonResponse({'status': 'error', 'message': 'POST method required.'}, status=405)

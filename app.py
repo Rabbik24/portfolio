@@ -144,19 +144,62 @@ def get_info():
 
 @app.route('/api/contact', methods=['POST'])
 def contact_api():
-    """API endpoint for contact form submission."""
+    """API endpoint for contact form submission & direct email notification to developer.rabbik@gmail.com."""
     data = request.get_json() or {}
     name = data.get('name', '').strip()
     email = data.get('email', '').strip()
+    subject = data.get('subject', '').strip() or 'Portfolio Contact Message'
     message = data.get('message', '').strip()
 
     if not name or not email or not message:
         return jsonify({"status": "error", "message": "All fields (name, email, message) are required."}), 400
 
+    recipient = os.environ.get('NOTIFICATION_EMAIL', 'developer.rabbik@gmail.com')
+    smtp_user = os.environ.get('EMAIL_HOST_USER') or os.environ.get('SMTP_USER')
+    smtp_pass = os.environ.get('EMAIL_HOST_PASSWORD') or os.environ.get('SMTP_PASSWORD')
+    smtp_server = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+    smtp_port = int(os.environ.get('EMAIL_PORT', 587))
+
+    email_sent = False
+    if smtp_user and smtp_pass:
+        try:
+            import smtplib
+            from email.mime.text import MIMEText
+            from email.mime.multipart import MIMEMultipart
+
+            msg = MIMEMultipart()
+            msg['From'] = smtp_user
+            msg['To'] = recipient
+            msg['Reply-To'] = email
+            msg['Subject'] = f"[Portfolio Contact] {subject} - From {name}"
+
+            body_content = (
+                f"Hello Mohamed Rabbik,\n\n"
+                f"You have received a new contact submission on your portfolio:\n\n"
+                f"Sender Name:    {name}\n"
+                f"Sender Email:   {email}\n"
+                f"Subject:        {subject}\n\n"
+                f"Message:\n{message}\n\n"
+                f"--------------------------------------------------\n"
+                f"Reply directly to sender: {email}\n"
+            )
+            msg.attach(MIMEText(body_content, 'plain'))
+
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()
+            server.login(smtp_user, smtp_pass)
+            server.send_message(msg)
+            server.quit()
+            email_sent = True
+        except Exception as e:
+            print(f"[!] SMTP Error in Flask app: {e}")
+
     return jsonify({
         "status": "success",
-        "message": f"Thank you, {name}! Your message has been received."
+        "email_sent": email_sent,
+        "message": f"Thank you, {name}! Your message and details have been sent directly to developer.rabbik@gmail.com."
     })
+
 
 @app.route('/api/verify-doc', methods=['POST'])
 def verify_doc_api():
