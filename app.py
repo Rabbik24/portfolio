@@ -20,7 +20,7 @@ RESUME_DATA = {
         "location": "Chennai, Tamil Nadu, India",
         "linkedin": "https://linkedin.com",
         "github": "https://github.com",
-        "portfolio": "https://rabbik.dev"
+        "portfolio": "https://mdrabbik.vercel.app/"
     },
     "summary": (
         "MCA graduate with professional experience in Python, SQL, Data Analytics, "
