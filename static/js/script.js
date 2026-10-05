@@ -385,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetEmail = 'developer.rabbik@gmail.com';
 
             try {
-                // Attempt primary Django/Flask API endpoint
+                // 1. Submit to Django/Flask Backend API (saves to SQLite DB & triggers backend email)
                 let res = await fetch('/api/contact/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -393,7 +393,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (!res.ok) {
-                    // Retry secondary endpoint format
                     res = await fetch('/api/contact', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -403,14 +402,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (res.ok) {
                     const resData = await res.json();
-                    showToast(resData.message || `Thank you, ${name}! Your information has been sent directly to ${targetEmail}.`, 'success');
+                    showToast(resData.message || `Thank you, ${name}! Message saved in DB and sent directly to ${targetEmail}.`, 'success');
                     apiSuccess = true;
                 }
             } catch (err) {
-                console.log("[Notice] API route unreachable, using direct mailto fallback for static hosting.");
+                console.log("[Notice] Backend API notice, proceeding to direct email service dispatch.");
             }
 
-            // Fallback for static file hosting or offline backend: launch direct mailto link to target email
+            // 2. Direct Web3Forms API dispatch to ensure direct mail arrives at developer.rabbik@gmail.com
+            try {
+                const w3Res = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        access_key: '7b12733d-c187-4d9d-8d4e-0a56bd1df5ee',
+                        name: name,
+                        email: email,
+                        subject: `[Portfolio Inquiry] ${subject} - From ${name}`,
+                        message: message,
+                        from_name: `${name} via Portfolio`,
+                        to_email: targetEmail
+                    })
+                });
+
+                if (w3Res.ok) {
+                    if (!apiSuccess) {
+                        showToast(`Thank you, ${name}! Your details have been sent directly to ${targetEmail}.`, 'success');
+                    }
+                    apiSuccess = true;
+                }
+            } catch (w3Err) {
+                console.log("[Notice] Web3Forms client dispatch notice.");
+            }
+
+            // 3. Fallback mailto trigger if network is offline
             if (!apiSuccess) {
                 const mailtoSubject = encodeURIComponent(`[Portfolio Contact] ${subject} - From ${name}`);
                 const mailtoBody = encodeURIComponent(
@@ -422,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     `Message:\n${message}\n`
                 );
                 
-                showToast(`Opening direct mail client to send information to ${targetEmail}...`, 'success');
+                showToast(`Opening mail client to send information to ${targetEmail}...`, 'info');
                 window.location.href = `mailto:${targetEmail}?subject=${mailtoSubject}&body=${mailtoBody}`;
             }
 

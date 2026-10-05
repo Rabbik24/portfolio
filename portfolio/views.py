@@ -1,11 +1,14 @@
 import json
 import os
+import urllib.request
+import urllib.parse
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import ContactMessage
+
 
 
 # Structured Resume Data Dictionary for Django Context & APIs
@@ -167,13 +170,14 @@ def api_contact(request):
             print(f"[!] DB Save Exception: {e}")
 
         # 2. Send Direct Mail to developer.rabbik@gmail.com
+        # 2. Send Direct Mail Notification to developer.rabbik@gmail.com
         recipient_email = getattr(settings, 'NOTIFICATION_EMAIL', 'developer.rabbik@gmail.com')
         email_sent = False
         
         email_subject = f"[Portfolio Contact] {subject} - From {name}"
         email_body = (
             f"Hello Mohamed Rabbik,\n\n"
-            f"You have received a new message from your portfolio website contact form:\n\n"
+            f"You have received a new contact submission from your portfolio website:\n\n"
             f"--------------------------------------------------\n"
             f"Sender Name:    {name}\n"
             f"Sender Email:   {email}\n"
@@ -185,6 +189,7 @@ def api_contact(request):
             f"Reply directly to sender: {email}\n"
         )
 
+        # Attempt A: Standard Django send_mail
         try:
             from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'developer.rabbik@gmail.com') or 'developer.rabbik@gmail.com'
             send_mail(
@@ -196,23 +201,37 @@ def api_contact(request):
             )
             email_sent = True
         except Exception as mail_err:
-            print(f"[!] SMTP Direct Mail Notice: {mail_err}")
-            # Try fallback silent attempt or console output
+            print(f"[!] Django SMTP Notice: {mail_err}")
+
+        # Attempt B: Direct HTTP Mailer API fallback to developer.rabbik@gmail.com
+        if not email_sent:
             try:
-                send_mail(
-                    subject=email_subject,
-                    message=email_body,
-                    from_email=from_email,
-                    recipient_list=[recipient_email],
-                    fail_silently=True,
+                w3_key = os.environ.get('WEB3FORMS_ACCESS_KEY', '7b12733d-c187-4d9d-8d4e-0a56bd1df5ee')
+                payload_data = json.dumps({
+                    "access_key": w3_key,
+                    "name": name,
+                    "email": email,
+                    "subject": f"[Portfolio Inquiry] {subject} from {name}",
+                    "message": message,
+                    "from_name": f"{name} (Portfolio Contact)",
+                    "to_email": "developer.rabbik@gmail.com"
+                }).encode('utf-8')
+
+                req = urllib.request.Request(
+                    "https://api.web3forms.com/submit",
+                    data=payload_data,
+                    headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
                 )
-            except Exception:
-                pass
+                with urllib.request.urlopen(req, timeout=8) as resp:
+                    if resp.status == 200:
+                        email_sent = True
+            except Exception as w3_err:
+                print(f"[!] Web3Forms API Notice: {w3_err}")
 
         return JsonResponse({
             'status': 'success',
             'email_sent': email_sent,
-            'message': f'Thank you, {name}! Your message and details have been sent directly to developer.rabbik@gmail.com.'
+            'message': f'Thank you, {name}! Your message has been saved in the database and sent directly to developer.rabbik@gmail.com.'
         })
 
     return JsonResponse({'status': 'error', 'message': 'POST method required.'}, status=405)
