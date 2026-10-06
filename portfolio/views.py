@@ -47,7 +47,7 @@ RESUME_DATA = {
             "role": "Technical Consultant",
             "company": "Vista Tech",
             "location": "Chennai",
-            "period": "Jan 2026 – Sept 2026",
+            "period": "Jan 2026 – Oct 2026",
             "highlights": [
                 "Deliver hands-on training in Python, SQL, Data Analytics, Web Development, and programming fundamentals.",
                 "Develop practical coding exercises, projects, and technical learning materials focused on real-world applications.",
