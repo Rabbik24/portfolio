@@ -1935,38 +1935,53 @@ body.light-theme .theme-toggle-btn .icon-dark { display: none; }
         font-size: 0.8rem;
     }
 
+    /* Mobile Dropdown Menu (In-place vertical dropdown, NO sliding drawer!) */
     .nav-menu {
-        position: fixed;
-        top: 60px;
-        right: -100%;
-        width: 82%;
-        max-width: 290px;
-        height: calc(100vh - 60px);
-        background: rgba(10, 14, 24, 0.98);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        max-height: 0;
+        opacity: 0;
+        visibility: hidden;
+        overflow: hidden;
+        background: rgba(8, 12, 22, 0.98);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border-left: 1px solid var(--border-glass);
-        padding: 2rem 1.5rem;
-        transition: right var(--transition-normal);
-        box-shadow: -10px 0 35px rgba(0, 0, 0, 0.6);
+        border-bottom: 1px solid var(--border-glass);
+        padding: 0 1.5rem;
+        transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, padding 0.3s ease, visibility 0.3s ease;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+        right: auto;
     }
 
     .nav-menu.active {
-        right: 0;
+        max-height: 400px;
+        opacity: 1;
+        visibility: visible;
+        padding: 1.25rem 1.5rem 1.5rem;
     }
 
     .nav-list {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 1.25rem;
+        align-items: center;
+        gap: 0.85rem;
         width: 100%;
+        text-align: center;
     }
 
     .nav-link {
-        font-size: 1.05rem;
-        display: block;
+        font-size: 1rem;
+        display: inline-block;
         width: 100%;
-        padding: 0.5rem 0;
+        padding: 0.45rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-link:last-child {
+        border-bottom: none;
     }
 
     .hamburger-btn {
@@ -2168,22 +2183,19 @@ body.light-theme .theme-toggle-btn .icon-dark { display: none; }
         padding: 1.35rem 1.1rem;
     }
 
+    /* Centered Wrap Skills Filter (No horizontal sliding) */
     .skills-filter-container {
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding-bottom: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        overflow-x: visible;
+        padding-bottom: 0;
         gap: 0.5rem;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-
-    .skills-filter-container::-webkit-scrollbar {
-        display: none;
     }
 
     .filter-tab {
-        white-space: nowrap;
-        padding: 0.45rem 1rem;
+        white-space: normal;
+        padding: 0.45rem 0.9rem;
         font-size: 0.82rem;
     }
 
