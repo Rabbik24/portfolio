@@ -23,14 +23,11 @@ RESUME_DATA = {
         "portfolio": "https://mdrabbik.vercel.app/"
     },
     "summary": (
-        "MCA graduate with professional experience in Python, SQL, Data Analytics, "
-        "Web Development, and AI/ML applications. Currently working as a Technical Consultant "
-        "at Vista Tech, delivering hands-on training and practical solutions in Python, SQL, Data Analytics, "
-        "and software development. Previously worked as a Full Stack Developer Intern developing web "
-        "applications and integrating APIs. Experienced in building AI-driven applications using Python, "
-        "Flask, MySQL, NLP, OCR, Computer Vision, REST APIs, and data processing techniques. Strong "
-        "problem-solving and communication skills with a passion for software development, data analytics, "
-        "AI/ML, and Data Engineering."
+        "MCA graduate and Technical Consultant with professional experience engineering Python, SQL, Data Analytics, "
+        "Full Stack Web Development, and AI/ML systems. Currently delivering hands-on technical solutions, mentoring 150+ engineers, "
+        "and building end-to-end web applications. Experienced in architecting AI-driven platforms with Python, Flask, Django, "
+        "MySQL, YOLOv8, PaddleOCR, NLP, and REST APIs. Driven by a commitment to writing clean, scalable code and transforming "
+        "complex data into actionable business intelligence."
     ),
     "skills": {
         "programming": ["Python", "Java", "JavaScript", "C", "C++", "HTML", "CSS"],
