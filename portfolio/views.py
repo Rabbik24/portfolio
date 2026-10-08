@@ -273,3 +273,25 @@ def api_match_resume(request):
         "match_analysis": result["match"],
         "candidate": "Mohamed Rabbik M"
     })
+
+@csrf_exempt
+def api_messages(request):
+    """API endpoint to retrieve contact form submissions saved in SQLite database."""
+    messages_qs = ContactMessage.objects.all().order_by('-created_at')
+    messages_list = [
+        {
+            'id': msg.id,
+            'name': msg.name,
+            'email': msg.email,
+            'subject': msg.subject,
+            'message': msg.message,
+            'created_at': msg.created_at.strftime('%Y-%m-%d %H:%M:%S') if msg.created_at else ''
+        }
+        for msg in messages_qs
+    ]
+    return JsonResponse({
+        'status': 'success',
+        'count': len(messages_list),
+        'messages': messages_list
+    })
+

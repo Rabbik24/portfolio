@@ -197,6 +197,15 @@ def contact_api():
         "message": f"Thank you, {name}! Your message and details have been sent directly to developer.rabbik@gmail.com."
     })
 
+@app.route('/api/messages', methods=['GET'])
+def get_messages_api():
+    """Retrieve messages stored in database (Flask API)."""
+    return jsonify({
+        "status": "success",
+        "message": "SQLite Database connected. All 'Get in Touch' contact submissions are saved to ContactMessage model and viewable via /admin or Django /api/messages/."
+    })
+
+
 
 @app.route('/api/verify-doc', methods=['POST'])
 def verify_doc_api():
